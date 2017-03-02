@@ -1,0 +1,63 @@
+#!/bin/bash
+
+####################################################################################################
+# general aliases
+####################################################################################################
+
+
+# for X forwarding
+export DISPLAY=:0.0
+
+# grep
+alias grep='grep --color'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+# ls 
+alias ll='ls -l'
+alias la='ls -A'
+alias lla='la -l'
+
+# draw a line
+alias line='python3 -c "print(u\"\u2550\" * $(tput cols))"'
+
+# pretty print aliases
+alias ppxml='xmllint --format -'
+alias ppjson='python3 -m json.tool'
+
+# timestamp alias
+alias ts='date +%s'
+
+# vim
+alias vim='vim -u ~/bash-stash/vimrc'
+alias vi='vim'
+
+
+
+####################################################################################################
+# cygwin aliases
+####################################################################################################
+
+
+if $bs_cygwin; then
+
+    # ls
+    alias ls='ls -hL --color=tty -I "NTUSER*" -I "ntuser*" --group-directories-first'
+
+    # fix current working directory to physical location, useful for correcting symlinks to actual path
+    alias ppwd='cd $(pwd -P)'
+
+    # jconsole and jvisualvm (runas to allow visability of all running JVMs)
+    alias jvisualvm='cygstart --action=runas jvisualvm'
+    alias jconsole='cygstart --action=runas jconsole'
+
+    # firefox
+    alias firefox='/cygdrive/c/Program\ Files\ \(x86\)/Mozilla\ Firefox/firefox.exe'
+
+    # notepad++
+    alias nppp='/cygdrive/c/Program\ Files\ \(x86\)/Notepad++/notepad++.exe'
+
+fi
+
+
+#echo "alias     sourced"

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# history
+export HISTIGNORE="ls:ll:la:lla:exit:clear:[ ]*"  # commands to ignore including space-prefixed
+export HISTCONTROL=erasedups                      # no dups
+export HISTSIZE=10000                             # 10,000 line history file
+
+shopt -s histappend  # append, useful for multiple bash sessions
+shopt -s histverify  # verify before execute
+
+set -o vi
+
+
+# cygwin specific
+if $bs_cgwin; then
+
+    # updatedb without the following
+    export PRUNEPATHS="/proc /tmp /usr/tmp /var/tmp"
+
+    # fix for ANSI Blue and Bright Blue http://en.wikipedia.org/wiki/ANSI_escape_code
+    # from mintty manual: "^[]4;num;red,green,blue^G" ( "\033" = "^[" and "\007" = "^G" )
+    #echo -en "\033]4;4;100,100,255\007"    # blue 4
+    #echo -en "\033]4;12;155,155,255\007"   # bright blue 12
+
+fi
+
+
+#echo "env       sourced"

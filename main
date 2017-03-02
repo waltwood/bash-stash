@@ -1,0 +1,36 @@
+#!/bin/bash
+
+bs_cygwin=false
+bs_linux=false
+
+case "`uname`" in
+    CYGWIN*)
+        bs_cygwin=true
+        ;;
+    Linux*)
+        bs_linux=true
+        ;;
+    *)
+        echo "Faild to establish OS!"
+esac
+
+
+# source the files
+pushd ~/bash-stash > /dev/null
+
+. ./env
+. ./alias
+. ./func
+
+echo -e '\e[34mbash-stash\e[0m';
+
+# check for an extension
+if [ -d ./bash-stash-ext ]; then
+    cd ./bash-stash-ext
+    . ./main
+    cd ..
+fi
+
+# back to start
+popd > /dev/null
+

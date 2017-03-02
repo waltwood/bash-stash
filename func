@@ -1,0 +1,116 @@
+#!/bin/bash
+
+####################################################################################################
+# general functions
+####################################################################################################
+
+
+# ssh, scp, and ssh-copy-id auto-complete
+_ssh-complete()
+{
+    local word=${COMP_WORDS[COMP_CWORD]}
+    # get the host names from ~/.ssh/config only the 1st time (takes a while)
+    local list=${SSH_COMP_LIST:=$(grep '^Host ' ~/.ssh/config | sed 's/Host //')}
+
+    COMPREPLY=($(compgen -W '${list[@]}' -- "$word"))
+}
+complete -F _ssh-complete ssh
+complete -F _ssh-complete scp
+complete -F _ssh-complete ssh-copy-id
+
+
+# setup ssh-agent if it's not running or connect to existing agent
+ssh-agent-init()
+{
+    local ssh_agent_pid=`pgrep ssh-agent`
+
+    # used $HOME because ~ doesn't expand in a quoted string
+    local ssh_env_file="$HOME/.ssh/environment"
+
+    # check if agent is running every time in case the session that started it ended
+    if [ -z "$ssh_agent_pid" ]; then
+        echo -e '\e[33mstarting ssh-agent\e[0m';
+        # start the agent with bash syntax and store the output
+        ssh-agent -s > "$ssh_env_file"
+        # source the output
+        . "$ssh_env_file" > /dev/null
+        # set a trap on EXIT
+        trap "kill $SSH_AGENT_PID" EXIT
+        # add the default key to the agent
+        ssh-add
+
+    # if local pid does not match environment pid then re-source the environment
+    elif [ "$ssh_agent_pid" != "$SSH_AGENT_PID" ]; then
+        # agent is running so just source the output
+        . "$ssh_env_file" > /dev/null
+        echo -e '\e[34mconnected to ssh-agent\e[0m';
+    fi
+}
+
+# call ssh-agent-init automatically when using ssh
+#alias ssh='ssh-agent-init ; ssh'
+#alias scp='ssh-agent-init ; scp'
+#alias git='ssh-agent-init ; git'
+
+# or  add to .bash_profile
+#echo "" && ssh-agent-init
+
+
+# cat part of a file from line n to line n for file f
+snip()
+{    
+    sed -n ${1},${2}p ${3}
+}
+
+
+# find and grep utility function since I use this all the time
+findngrep()
+{
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo ""
+        echo "Usage: findngrep <file pattern> <grep pattern> [extra grep parameters]"
+        echo " Each paramerter is a single string, escape or use quotes when spaces are present."
+        echo " Backslashes must be double-escaped (e.g. \"\\\\\")."
+        echo ""
+        return 1
+    fi
+
+    echo ""
+    echo "find . -name \"$1\" -type f -exec grep -EHni $3 --color \"$2\" {} \;"
+    echo ""
+
+    find . -name "$1" -type f -exec grep -EHni $3 --color "$2" {} \;
+}
+
+
+####################################################################################################
+# cygiwn functions
+####################################################################################################
+
+
+if $bs_cygwin; then
+
+    # open an explorer window in current or provided directory
+    exp()
+    {
+        if [ -z "$1" ]; then
+            cygstart -x .
+        else
+            cygstart -x "$1"
+        fi
+    }
+
+    # open a command window in current or provided directory
+    cmd()
+    {
+        if [ -z "$1" ]; then
+            cygstart cmd
+        else
+            cygstart -d "$1" cmd
+        fi
+    }
+
+fi
+
+
+#echo "func      sourced"
