@@ -9,14 +9,15 @@
 _ssh-complete()
 {
     local word=${COMP_WORDS[COMP_CWORD]}
+    local list # add cusotm stuff here
     # get the host names from ~/.ssh/config only the 1st time (takes a while)
-    local list=${SSH_COMP_LIST:=$(grep '^Host ' ~/.ssh/config | sed 's/Host //')}
+    if [ -s ~/.ssh/config ]; then
+        list+=" "${SSH_COMP_LIST:=$(grep '^Host ' ~/.ssh/config | sed 's/Host //')}
+    fi;
 
     COMPREPLY=($(compgen -W '${list[@]}' -- "$word"))
 }
-complete -F _ssh-complete ssh
-complete -F _ssh-complete scp
-complete -F _ssh-complete ssh-copy-id
+complete -f -F _ssh-complete ssh scp ssh-copy-id
 
 
 # setup ssh-agent if it's not running or connect to existing agent
@@ -51,9 +52,6 @@ ssh-agent-init()
 #alias ssh='ssh-agent-init ; ssh'
 #alias scp='ssh-agent-init ; scp'
 #alias git='ssh-agent-init ; git'
-
-# or  add to .bash_profile
-#echo "" && ssh-agent-init
 
 
 # cat part of a file from line n to line n for file f
