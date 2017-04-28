@@ -3,6 +3,7 @@
 bs_cygwin=false
 bs_linux=false
 
+# os check
 case "`uname`" in
     CYGWIN*)
         bs_cygwin=true
@@ -13,7 +14,6 @@ case "`uname`" in
     *)
         echo "Faild to establish OS!"
 esac
-
 
 # source the files
 pushd ~/bash-stash > /dev/null
@@ -33,4 +33,3 @@ fi
 
 # back to start
 popd > /dev/null
-

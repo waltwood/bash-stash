@@ -9,9 +9,10 @@
 export DISPLAY=:0.0
 
 # grep
-alias grep='grep --color'
+alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
+alias cgrep='grep --color=always'
 
 # ls 
 alias ll='ls -l'
@@ -32,7 +33,11 @@ alias ts='date +%s'
 alias vim='vim -u ~/bash-stash/vimrc'
 alias vi='vim'
 
+# diff
+alias diff='diff --color=always'
 
+# less
+alias less='less -r'
 
 ####################################################################################################
 # cygwin aliases
@@ -42,7 +47,7 @@ alias vi='vim'
 if $bs_cygwin; then
 
     # ls
-    alias ls='ls -hL --color=tty -I "NTUSER*" -I "ntuser*" --group-directories-first'
+    alias ls='ls -hL --color=auto -I "NTUSER*" -I "ntuser*" --group-directories-first'
 
     # fix current working directory to physical location, useful for correcting symlinks to actual path
     alias ppwd='cd $(pwd -P)'
