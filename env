@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# prompt
+# export PS1="\h:\u [\W]\\$ "
+# export PS1="\[\e]0;\w\a\]\n\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$ "
+# export PS1="\[\e[32m\]\u \[\e[33m\]\w\[\e[0m\]\n\$ "
+
 # history
 export HISTIGNORE="ls:ll:la:lla:exit:clear:[ ]*"  # commands to ignore including space-prefixed
 export HISTCONTROL=erasedups                      # no dups
@@ -10,19 +15,60 @@ shopt -s histverify  # verify before execute
 
 set -o vi
 
+####################################################################################################
+# cygwin env
+####################################################################################################
 
-# cygwin specific
-if $bs_cgwin; then
+if $bs_cygwin; then
+  # updatedb without the following
+  export PRUNEPATHS="/proc /tmp /usr/tmp /var/tmp"
 
-    # updatedb without the following
-    export PRUNEPATHS="/proc /tmp /usr/tmp /var/tmp"
-
-    # fix for ANSI Blue and Bright Blue http://en.wikipedia.org/wiki/ANSI_escape_code
-    # from mintty manual: "^[]4;num;red,green,blue^G" ( "\033" = "^[" and "\007" = "^G" )
-    #echo -en "\033]4;4;100,100,255\007"    # blue 4
-    #echo -en "\033]4;12;155,155,255\007"   # bright blue 12
-
+  # fix for ANSI Blue and Bright Blue http://en.wikipedia.org/wiki/ANSI_escape_code
+  # from mintty manual: "^[]4;num;red,green,blue^G" ( "\033" = "^[" and "\007" = "^G" )
+  #echo -en "\033]4;4;100,100,255\007"    # blue 4
+  #echo -en "\033]4;12;155,155,255\007"   # bright blue 12
 fi
 
+####################################################################################################
+# mac env
+####################################################################################################
+
+if $bs_mac; then
+  export CLICOLOR=0
+
+  export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home"
+  # export JAVA_TOOL_OPTIONS="-Dapple.awt.UIElement=true" # stop java icon from appearing in dock
+
+  # python pip --user packages
+  export PATH="$HOME/Library/Python/2.7/bin:$PATH"
+  export PATH="$HOME/Library/Python/3.7/bin:$PATH"
+
+  # brew
+  if type brew &> /dev/null; then
+    brew_pfx=$(brew --prefix)
+
+    # python3 as default
+    export PATH="$brew_pfx/opt/python/libexec/bin:$PATH"
+
+    # version override
+    export PATH="$brew_pfx/opt/tomcat@8/bin:$PATH"
+
+    # system override
+    export PATH="$brew_pfx/opt/grep/libexec/gnubin:$PATH"
+    export MANPATH="$brew_pfx/opt/grep/libexec/gnuman:$MANPATH"
+
+    # bash completions
+    for completion_file in $brew_pfx/etc/bash_completion.d/*; do
+      source "$completion_file"
+    done
+
+    # https://github.com/magicmonty/bash-git-prompt
+    if [ -f "$brew_pfx/opt/bash-git-prompt/share/gitprompt.sh" ]; then
+      __GIT_PROMPT_DIR="$brew_pfx/opt/bash-git-prompt/share"
+      GIT_PROMPT_THEME=Solarized
+      source "$brew_pfx/opt/bash-git-prompt/share/gitprompt.sh"
+    fi
+  fi
+fi
 
 #echo "env       sourced"

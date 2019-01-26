@@ -2,17 +2,21 @@
 
 bs_cygwin=false
 bs_linux=false
+bs_mac=false
 
 # os check
 case "`uname`" in
-    CYGWIN*)
-        bs_cygwin=true
-        ;;
-    Linux*)
-        bs_linux=true
-        ;;
-    *)
-        echo "Faild to establish OS!"
+  CYGWIN*)
+    bs_cygwin=true
+    ;;
+  Linux*)
+    bs_linux=true
+    ;;
+  Darwin*)
+    bs_mac=true
+    ;;
+  *)
+    echo "Faild to establish OS!"
 esac
 
 # source the files
@@ -26,9 +30,9 @@ echo -e '\e[34mbash-stash\e[0m';
 
 # check for an extension
 if [ -d ./bash-stash-ext ]; then
-    cd ./bash-stash-ext
-    . ./main
-    cd ..
+  cd ./bash-stash-ext
+  . ./main
+  cd ..
 fi
 
 # back to start

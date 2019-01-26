@@ -4,7 +4,6 @@
 # general aliases
 ####################################################################################################
 
-
 # for X forwarding
 export DISPLAY=:0.0
 
@@ -14,7 +13,7 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias cgrep='grep --color=always'
 
-# ls 
+# ls
 alias ll='ls -l'
 alias la='ls -A'
 alias lla='la -l'
@@ -33,36 +32,41 @@ alias ts='date +%s'
 alias vim='vim -u ~/bash-stash/vimrc'
 alias vi='vim'
 
-# diff
-alias diff='diff --color=always'
-
-# less
+# less raw controll chars
 alias less='less -r'
+
+####################################################################################################
+# mac aliases
+####################################################################################################
+
+if $bs_mac; then
+  # remove screenshots
+  alias rm-ss='rm ~/Desktop/Screen*'
+fi
 
 ####################################################################################################
 # cygwin aliases
 ####################################################################################################
 
-
 if $bs_cygwin; then
+  # ls
+  alias ls='ls -hL --color=auto -I "NTUSER*" -I "ntuser*" --group-directories-first'
 
-    # ls
-    alias ls='ls -hL --color=auto -I "NTUSER*" -I "ntuser*" --group-directories-first'
+  # diff
+  alias diff='diff --color=always'
 
-    # fix current working directory to physical location, useful for correcting symlinks to actual path
-    alias ppwd='cd $(pwd -P)'
+  # fix current working directory to physical location, useful for correcting symlinks to actual path
+  alias cd-pwd='cd $(pwd -P)'
 
-    # jconsole and jvisualvm (runas to allow visability of all running JVMs)
-    alias jvisualvm='cygstart --action=runas jvisualvm'
-    alias jconsole='cygstart --action=runas jconsole'
+  # jconsole and jvisualvm (runas to allow visability of all running JVMs)
+  alias jvisualvm='cygstart --action=runas jvisualvm'
+  alias jconsole='cygstart --action=runas jconsole'
 
-    # firefox
-    alias firefox='/cygdrive/c/Program\ Files\ \(x86\)/Mozilla\ Firefox/firefox.exe'
+  # firefox
+  alias firefox='/cygdrive/c/Program\ Files\ \(x86\)/Mozilla\ Firefox/firefox.exe'
 
-    # notepad++
-    alias nppp='/cygdrive/c/Program\ Files\ \(x86\)/Notepad++/notepad++.exe'
-
+  # notepad++
+  alias nppp='/cygdrive/c/Program\ Files\ \(x86\)/Notepad++/notepad++.exe'
 fi
-
 
 #echo "alias     sourced"
